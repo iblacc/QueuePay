@@ -35,10 +35,10 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Long getIdFromJwt(String token){
+    public UUID getIdFromJwt(String token){
         Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
 
-        return Long.valueOf(claims.getSubject());
+        return UUID.fromString(claims.getSubject());
 
     }
 
