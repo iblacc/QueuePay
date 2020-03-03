@@ -17,15 +17,15 @@ public class Document {
     private String documentType;
 
     @Lob
-    private byte[] data;
+    private byte[] document;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Document(String documentName, String documentType, byte[] data) {
+    public Document(String documentName, String documentType, byte[] document) {
        this.documentName = documentName;
        this.documentType = documentType;
-       this.data = data;
+       this.document = document;
     }
 }

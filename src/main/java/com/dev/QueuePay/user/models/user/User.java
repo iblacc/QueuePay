@@ -44,8 +44,9 @@ public class User extends DateAudit {
     @Size(min = 8)
     private String password;
 
-
-    private String logo;
+    @Lob
+    @Column(name = "photo", columnDefinition="BLOB")
+    private byte[] logo;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name= "document_id")
@@ -111,11 +112,11 @@ public class User extends DateAudit {
         this.password = password;
     }
 
-    public String getLogo() {
+    public byte[] getLogo() {
         return logo;
     }
 
-    public void setLogo(String logo) {
+    public void setLogo(byte[] logo) {
         this.logo = logo;
     }
 
