@@ -14,7 +14,7 @@ public interface UserService {
 
     MerchantProfile getProfile(String email);
 
-    User addUser(User user);
+    User createUser(User user);
 
     User updateUser(User newUser, String email, UserPrincipal currentUser);
 
