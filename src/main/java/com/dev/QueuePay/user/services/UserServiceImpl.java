@@ -1,6 +1,9 @@
 package com.dev.QueuePay.user.services;
 
 import com.amazonaws.services.rds.model.ResourceNotFoundException;
+import com.dev.QueuePay.exception.AccessDeniedException;
+import com.dev.QueuePay.exception.BadRequestException;
+import com.dev.QueuePay.exception.UnauthorizedException;
 import com.dev.QueuePay.user.dto.InfoRequest;
 import com.dev.QueuePay.user.dto.MerchantProfile;
 import com.dev.QueuePay.user.dto.MerchantSummary;
