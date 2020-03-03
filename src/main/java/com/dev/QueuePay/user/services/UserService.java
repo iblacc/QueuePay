@@ -1,5 +1,6 @@
 package com.dev.QueuePay.user.services;
 
+import com.dev.QueuePay.Response.ApiResponse;
 import com.dev.QueuePay.user.dto.InfoRequest;
 import com.dev.QueuePay.user.dto.MerchantProfile;
 import com.dev.QueuePay.user.dto.MerchantSummary;

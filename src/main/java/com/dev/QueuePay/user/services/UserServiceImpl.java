@@ -1,9 +1,7 @@
 package com.dev.QueuePay.user.services;
 
-import com.amazonaws.services.rds.model.ResourceNotFoundException;
-import com.dev.QueuePay.exception.AccessDeniedException;
-import com.dev.QueuePay.exception.BadRequestException;
-import com.dev.QueuePay.exception.UnauthorizedException;
+import com.dev.QueuePay.Response.ApiResponse;
+import com.dev.QueuePay.exception.*;
 import com.dev.QueuePay.user.dto.InfoRequest;
 import com.dev.QueuePay.user.dto.MerchantProfile;
 import com.dev.QueuePay.user.dto.MerchantSummary;
@@ -53,7 +51,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MerchantProfile getProfile(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email",email));
 
 
         return new MerchantProfile(user.getId(), user.getEmail(), user.getBusinessName(), user.getBusinessDescription(),
@@ -80,7 +78,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User newUser, String email, UserPrincipal currentUser) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
         if (user.getId().equals(currentUser.getId())
                 || currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             user.setBusinessName(newUser.getBusinessName());
@@ -102,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse deleteUser(String email, UserPrincipal currentUser) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
         if (!user.getId().equals(currentUser.getId()) || !currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + email);
             throw new AccessDeniedException(apiResponse);
@@ -116,7 +114,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse giveAdmin(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName(RoleName.ROLE_ADMIN)
                 .orElseThrow(() -> new AppException("User role not set")));
@@ -130,7 +128,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse removeAdmin(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
         List<Role> roles = new ArrayList<>();
         roles.add(
                 roleRepository.findByName(RoleName.ROLE_MERCHANT).orElseThrow(() -> new AppException("User role not set")));
@@ -142,7 +140,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MerchantProfile setOrUpdateInfo(UserPrincipal currentUser, InfoRequest infoRequest) {
         User user = userRepository.findByEmail(currentUser.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException(currentUser.getEmail()));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", currentUser.getEmail()));
         Document document = new Document(infoRequest.getDocumentName(), infoRequest.getDocumentType(), infoRequest.getDocument());
         if (user.getId().equals(currentUser.getId())
                 || currentUser.getAuthorities().contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {

@@ -1,6 +1,7 @@
 package com.dev.QueuePay.exception;
 
-import com.amazonaws.services.rds.model.ResourceNotFoundException;
+import com.dev.QueuePay.Response.ApiResponse;
+import com.dev.QueuePay.Response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -47,7 +48,7 @@ public class RestControllerExceptionHandler {
     public ResponseEntity<ApiResponse> resolveException(BadRequestException exception){
         ApiResponse apiResponse = exception.getApiResponse();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 
 

@@ -1,5 +1,6 @@
 package com.dev.QueuePay.exception;
 
+import com.dev.QueuePay.Response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
