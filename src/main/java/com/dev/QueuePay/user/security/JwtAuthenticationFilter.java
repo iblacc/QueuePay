@@ -1,5 +1,6 @@
 package com.dev.QueuePay.user.security;
 
+import com.dev.QueuePay.user.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,12 +19,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
     private JwtTokenProvider tokenProvider;
+    private UserDetailsServiceImpl customUserDetailsService;
 
     @Autowired
-    private UserDetailsServiceImpl customUserDetailsService;
+    public JwtAuthenticationFilter(UserDetailsServiceImpl customUserDetailsService, JwtTokenProvider tokenProvider) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.tokenProvider = tokenProvider;
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
