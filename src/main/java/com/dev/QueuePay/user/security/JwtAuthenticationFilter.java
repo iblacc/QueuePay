@@ -21,6 +21,7 @@ import java.util.UUID;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     private JwtTokenProvider tokenProvider;
     private UserDetailsServiceImpl customUserDetailsService;
 

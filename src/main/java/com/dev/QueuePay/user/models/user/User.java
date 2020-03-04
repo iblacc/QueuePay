@@ -34,8 +34,7 @@ public class User extends DateAudit {
     @NotNull
     private String businessName;
 
-    @NotBlank
-    @NotNull
+    @Column
     private String businessDescription;
 
     @NotBlank
@@ -48,7 +47,7 @@ public class User extends DateAudit {
     @Column(name = "photo", columnDefinition="BLOB")
     private byte[] logo;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "document_id")
     private Document document;
 
