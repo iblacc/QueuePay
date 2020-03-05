@@ -18,6 +18,12 @@ public class SignUpRequest {
     @Size(min = 6, max = 20)
     private String password;
 
+    public SignUpRequest(String businessName, String email,String password) {
+        this.businessName = businessName;
+        this.email = email;
+        this.password = password;
+    }
+
     public String getBusinessName() {
         return businessName;
     }

@@ -20,7 +20,7 @@ public class Document {
     @Lob
     private byte[] document;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
