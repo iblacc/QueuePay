@@ -1,9 +1,5 @@
-package com.dev.QueuePay.controllers;
+package com.dev.QueuePay.controller;
 
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.dev.QueuePay.payload.Response;
 import com.dev.QueuePay.services.auth.DatabaseFileService;
@@ -15,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("auth")

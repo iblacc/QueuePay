@@ -1,8 +1,6 @@
 package com.dev.QueuePay.user.models.user;
 
 import com.dev.QueuePay.user.models.DateAudit;
-import com.dev.QueuePay.user.models.document.DatabaseFile;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;

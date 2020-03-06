@@ -1,10 +1,6 @@
 package com.dev.QueuePay.services.auth;
 
 
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import com.dev.QueuePay.exceptions.FileStorageException;
 import com.dev.QueuePay.user.models.document.DatabaseFile;
 import com.dev.QueuePay.user.repositories.DatabaseFileRepository;
@@ -13,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 @Service

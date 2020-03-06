@@ -1,4 +1,4 @@
-package com.dev.QueuePay.controllers;
+package com.dev.QueuePay.controller;
 
 import com.dev.QueuePay.responses.Response;
 import com.dev.QueuePay.services.auth.AuthService;
