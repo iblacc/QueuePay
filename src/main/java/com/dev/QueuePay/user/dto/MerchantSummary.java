@@ -1,12 +1,24 @@
 package com.dev.QueuePay.user.dto;
 
+import java.util.UUID;
+
 public class MerchantSummary {
     private String businessName;
     private String email;
+    private UUID id;
 
-    public MerchantSummary(String businessName, String email) {
+    public MerchantSummary(UUID id, String businessName, String email) {
+        this.id = id;
         this.businessName = businessName;
         this.email = email;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getBusinessName() {
