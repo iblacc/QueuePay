@@ -1,0 +1,40 @@
+server:
+  port: 8081
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/queuepaydb?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+    username: root
+    password: shaibuonuv1
+
+
+  jpa:
+#    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+      # Allows Hibernate to generate SQL optimized for a particular DBMS
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: victoronushaibu@gmail.com
+    password: shaibuonuv1
+
+    #other properties
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+
+
+

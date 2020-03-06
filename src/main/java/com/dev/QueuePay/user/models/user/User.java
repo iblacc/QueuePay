@@ -1,10 +1,11 @@
 package com.dev.QueuePay.user.models.user;
 
 import com.dev.QueuePay.user.models.DateAudit;
-import com.dev.QueuePay.user.models.document.Document;
-import com.dev.QueuePay.user.models.role.Role;
+import com.dev.QueuePay.user.models.document.DatabaseFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,17 +13,23 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 public class User extends DateAudit {
+//    @Id
+//    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+//    private UUID id;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
+   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID userId;
 
     @NotBlank
     @NotNull
@@ -34,8 +41,6 @@ public class User extends DateAudit {
     @NotNull
     private String businessName;
 
-    @NotBlank
-    @NotNull
     private String businessDescription;
 
     @NotBlank
@@ -44,40 +49,54 @@ public class User extends DateAudit {
     @Size(min = 8)
     private String password;
 
-    @Lob
-    @Column(name = "photo", columnDefinition="BLOB")
-    private byte[] logo;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name= "document_id")
-    private Document document;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+//    @OneToOne
+//    @Column(name = "logo")
+//    private DatabaseFile logo;
+//
+//    @OneToOne
+//    @Column(name = "CAC")
+//    private DatabaseFile CAC;
 
 
-    @JsonIgnore
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    List<Role> roles;
+
     private String verifyEmailToken;
 
-    @JsonIgnore
+
+    @JsonIgnoreProperties
+   @Enumerated(EnumType.STRING)
     private EmailVerificationStatus emailVerificationStatus = EmailVerificationStatus.UNVERIFIED;
+
+
 
     public User() {
     }
 
     public User(String businessName, String email, String password) {
+        super();
         this.businessName = businessName;
         this.email = email;
         this.password = password;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -112,21 +131,6 @@ public class User extends DateAudit {
         this.password = password;
     }
 
-    public byte[] getLogo() {
-        return logo;
-    }
-
-    public void setLogo(byte[] logo) {
-        this.logo = logo;
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
 
     public String getVerifyEmailToken() {
         return verifyEmailToken;
@@ -144,17 +148,26 @@ public class User extends DateAudit {
         this.emailVerificationStatus = emailVerificationStatus;
     }
 
-    public List<Role> getRoles() {
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", businessName='" + businessName + '\'' +
+                ", businessDescription='" + businessDescription + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                ", verifyEmailToken='" + verifyEmailToken + '\'' +
+                ", emailVerificationStatus=" + emailVerificationStatus +
+                '}';
+    }
 
-        return roles == null ? null : new ArrayList<>(roles);
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
     public void setRoles(List<Role> roles) {
-
-        if (roles == null) {
-            this.roles = null;
-        } else {
-            this.roles = Collections.unmodifiableList(roles);
-        }
+        this.roles = roles;
     }
 }

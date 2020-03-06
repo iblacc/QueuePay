@@ -1,4 +1,4 @@
-package com.dev.QueuePay.user.dto;
+package com.dev.QueuePay.user.dto.auth;
 
 import javax.validation.constraints.NotBlank;
 
