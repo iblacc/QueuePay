@@ -1,6 +1,5 @@
 package com.dev.QueuePay.user.dto;
 
-import com.dev.QueuePay.user.models.document.Document;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
