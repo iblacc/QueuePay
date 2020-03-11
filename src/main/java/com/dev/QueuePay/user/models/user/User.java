@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class User extends DateAudit {
 //    @Id
 //    @GeneratedValue(generator = "UUID")

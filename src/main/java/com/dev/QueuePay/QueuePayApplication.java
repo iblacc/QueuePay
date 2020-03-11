@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Properties;
 
@@ -44,6 +45,11 @@ public class QueuePayApplication {
 		props.put("mail.debug", "true");
 
 		return mailSender;
+	}
+
+	@Bean
+	public RestTemplate getRestTemplate(){
+		return new RestTemplate();
 	}
 
 }

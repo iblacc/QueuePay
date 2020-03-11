@@ -3,7 +3,7 @@ package com.dev.QueuePay.security;
 public class SecurityConstants {
     public static final String AUTH_LOGIN_URL = "/auth/login";
 
-    public static final String AUTH_SIGN_UP_URL = "/auth/signUp";
+    public static final String AUTH_SIGN_UP_URL = "/auth/signup";
 
     public static final String AUTH_VERIFY_URL = "/auth/verifyEmail/**";
 
