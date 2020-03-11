@@ -2,6 +2,7 @@ package com.dev.QueuePay.exceptions;
 
 import org.springframework.http.HttpStatus;
 
+
 public class CustomException extends RuntimeException {
 
     private String message;
