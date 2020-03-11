@@ -1,5 +1,6 @@
 package com.dev.QueuePay.responses;
 
+import com.dev.QueuePay.user.models.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,10 @@ public class Response<T> {
     private String error;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime dateTime;
-    private T data;
+    private Map<String, Object> data;
     private String debugMessage;
     private Map<String, String> subErrors;
+    private User userdata;
 
     public HttpStatus getStatus() {
         return status;
@@ -56,11 +58,11 @@ public class Response<T> {
         this.dateTime = dateTime;
     }
 
-    public T getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
     }
 
@@ -78,6 +80,14 @@ public class Response<T> {
 
     public void setSubErrors(Map<String, String> subErrors) {
         this.subErrors = subErrors;
+    }
+
+    public User getUserdata() {
+        return userdata;
+    }
+
+    public void setUserdata(User userdata) {
+        this.userdata = userdata;
     }
 
     private Response() {

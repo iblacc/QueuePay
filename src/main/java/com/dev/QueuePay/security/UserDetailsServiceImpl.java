@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         return org.springframework.security.core.userdetails.User.withUsername(email)
-                .password(user.getPassword()).authorities(user.getRoles())
+                .password(user.getPassword()).authorities(user.getRole())
                 .accountExpired(false).accountLocked(false)
                 .credentialsExpired(false).disabled(false).build();
     }
