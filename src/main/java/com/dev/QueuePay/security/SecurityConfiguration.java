@@ -42,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PATCH, SecurityConstants.SET_NEW_PASSWORD_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.UPL0AD_FILE_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.DOWNLOAD_FILE_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.UPDATE_PROFILE_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
