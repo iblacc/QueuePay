@@ -19,8 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -52,9 +51,10 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException("Email already has an account with us", HttpStatus.CONFLICT);
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList(Role.ROLE_MERCHANT));
+        user.setRole(Role.ROLE_MERCHANT);
         String token = jwtTokenProvider.generateToken(user.getEmail());
         user.setVerifyEmailToken(token);
+
         String url = "http://localhost:"+ port + "/auth/verifyEmail/" + token;
         String message =
                 "Hello" + user.getBusinessName() + ",\n" +
@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
     }
 
-    public String signInUser(String email, String password) {
+    public Map<String, Object> signInUser(String email, String password) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password));
@@ -89,18 +89,37 @@ public class AuthServiceImpl implements AuthService {
         if (user.getEmailVerificationStatus() == EmailVerificationStatus.UNVERIFIED) {
             throw new CustomException("You haven't verified your account yet", HttpStatus.BAD_REQUEST);
         }
-        return jwtTokenProvider.createToken(user.getUserId(), email, user.getRoles(), 86400000);
 
+        Map<String, Object> result = new HashMap<>();
+        String token = jwtTokenProvider.createToken(user.getId(), email, user.getRole(), 86400000);
+        Long userId = user.getId();
+        String userEmail = user.getEmail();
+        String userBusinessName = user.getBusinessName();
+        result.put("token", token);
+        result.put("userId", userId);
+        result.put("userEmail", userEmail);
+        result.put("userBusinessName", userBusinessName);
+        return  result;
     }
 
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new CustomException("You are yet to register on Banka", HttpStatus.BAD_REQUEST);
+            throw new CustomException("You are yet to register on QueuePay", HttpStatus.BAD_REQUEST);
         }
-        String token = jwtTokenProvider.createToken(user.getUserId(), user.getEmail(),
-                user.getRoles(), 3600000);
+        String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(),
+                user.getRole(), 3600000);
         System.out.println(token);
+        user.setResetPasswordToken(token);
+        String url = "http://localhost:" + port + "/password-reset?token="+user.getResetPasswordToken();
+
+        userRepository.save(user);
+
+        String message =
+                "Hello" + user.getBusinessName() + ",\n" +
+                        "A request was made to change Password. If it was not you, " +
+                        "please ignore." +
+
         String url = "http://localhost:" + port + "/password-reset/" + user.getUserId() + token;
 
         String message =
@@ -110,17 +129,18 @@ public class AuthServiceImpl implements AuthService {
         emailSender.sendEmail(user.getEmail(), "QueuePay Reset Password", message);
     }
 
-    public void setNewPassword(UUID id, String newPassword, String token) {
-        if (jwtTokenProvider.isTokenExpired(token)) {
-            throw new CustomException("The token has expired", HttpStatus.FORBIDDEN);
-        }
-        String email = jwtTokenProvider.getEmail(token);
-        if (!userRepository.existsByEmail(email)) {
+    public void setNewPassword(String token, String newPassword) {
+
+        Optional<User> user = userRepository.findByResetPasswordToken(token);
+        if (!user.isPresent()) {
             throw new CustomException("There is a compromise", HttpStatus.BAD_REQUEST);
         }
-        User user = userRepository.findByUserId(id);
-        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
-        userRepository.save(user);
+        User resetUser = user.get();
+            resetUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            resetUser.setResetPasswordToken(null);
+            userRepository.save(resetUser);
+
+
     }
 
 

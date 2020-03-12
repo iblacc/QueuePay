@@ -20,6 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("auth")
+@CrossOrigin
 public class AuthController {
 
     private AuthService authService;
@@ -35,7 +36,7 @@ public class AuthController {
     public ResponseEntity<Response<String>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         authService.createUser(modelMapper.map(signUpRequest, User.class));
         Response<String> response = new Response<>(HttpStatus.CREATED);
-        response.setMessage("You have successfully signed up on Qpay");
+        response.setMessage("You have successfully signed up on Qpay, Pleach check your mail to verify your account before you sign in");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -43,17 +44,15 @@ public class AuthController {
     public ResponseEntity<Response<String>> verifyUser(@PathVariable("token") String token) {
         authService.verifyUser(token);
         Response<String> response = new Response<>(HttpStatus.ACCEPTED);
-        response.setMessage("You are now a verified user of Qpay");
+        response.setMessage("You are now a verified user of Qpay. Kindly update your profile quickly to enjoy more offers");
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("login")
     public ResponseEntity<Response<Map<String, String>>> signInUser(@Valid @RequestBody LoginRequest loginRequest) {
-        String token = authService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
+        Map<String, Object> result = authService.signInUser(loginRequest.getEmail(), loginRequest.getPassword());
         Response<Map<String, String>> response = new Response<>(HttpStatus.OK);
         response.setMessage("User successfully logged in");
-        Map<String, String> result = new HashMap<>();
-        result.put("token", token);
         response.setData(result);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -67,13 +66,17 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PatchMapping("set-new-password")
-    public ResponseEntity<Response<String>> setNewPassword(@RequestParam("id") UUID id,
-                                                           @Valid @RequestBody NewPasswordRequest newPasswordRequest,
-                                                           @RequestParam String token) {
-        authService.setNewPassword(id, newPasswordRequest.getNewPassword(), token);
+
+
+
+        @PatchMapping("set-new-password")
+    public ResponseEntity<Response<String>> setNewPassword(@RequestParam String token, @RequestBody NewPasswordRequest newPasswordRequest) {
+        authService.setNewPassword(token, newPasswordRequest.getNewPassword());
         Response<String> response = new Response<>(HttpStatus.OK);
         response.setMessage("Password successfully reset");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
+
 }

@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,8 +36,8 @@ public class QueuePayApplication {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 
-		mailSender.setUsername("victoronushaibu@gmail.com");
-		mailSender.setPassword("shaibuonuv1");
+		mailSender.setUsername("");
+		mailSender.setPassword("");
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.transport.protocol", "smtp");
@@ -47,9 +48,19 @@ public class QueuePayApplication {
 		return mailSender;
 	}
 
+
+//	@Bean
+//	public LocalSessionFactoryBean sessionFactory() {
+//		Properties properties = new Properties();
+//		LocalSessionFactoryBean bean=new LocalSessionFactoryBean();
+//
+//		return bean;
+//	}
+
 	@Bean
 	public RestTemplate getRestTemplate(){
 		return new RestTemplate();
 	}
+
 
 }

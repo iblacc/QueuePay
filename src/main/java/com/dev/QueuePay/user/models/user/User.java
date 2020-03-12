@@ -1,10 +1,12 @@
 package com.dev.QueuePay.user.models.user;
 
 import com.dev.QueuePay.user.models.DateAudit;
+import com.dev.QueuePay.user.models.document.ProfileUpdate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.cache.interceptor.CacheAspectSupport;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -17,18 +19,12 @@ import java.util.UUID;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class User extends DateAudit {
-//    @Id
-//    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-//    private UUID id;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @GeneratedValue(generator = "UUID")
-   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID userId;
 
     @NotBlank
     @NotNull
@@ -49,26 +45,27 @@ public class User extends DateAudit {
     private String password;
 
 
-//    @OneToOne
-//    @Column(name = "logo")
-//    private DatabaseFile logo;
-//
-//    @OneToOne
-//    @Column(name = "CAC")
-//    private DatabaseFile CAC;
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @Fetch(value = FetchMode.SUBSELECT)
+//    List<Role> roles;
 
-
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    List<Role> roles;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private String verifyEmailToken;
+
+    private String resetPasswordToken;
 
 
     @JsonIgnoreProperties
    @Enumerated(EnumType.STRING)
     private EmailVerificationStatus emailVerificationStatus = EmailVerificationStatus.UNVERIFIED;
+
+
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "user")
+    private ProfileUpdate profileUpdate;
 
 
 
@@ -90,13 +87,6 @@ public class User extends DateAudit {
         this.id = id;
     }
 
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
 
     public String getEmail() {
         return email;
@@ -147,26 +137,19 @@ public class User extends DateAudit {
         this.emailVerificationStatus = emailVerificationStatus;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", businessName='" + businessName + '\'' +
-                ", businessDescription='" + businessDescription + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                ", verifyEmailToken='" + verifyEmailToken + '\'' +
-                ", emailVerificationStatus=" + emailVerificationStatus +
-                '}';
+    public Role getRole() {
+        return role;
     }
 
-
-    public List<Role> getRoles() {
-        return roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
     }
 }

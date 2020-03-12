@@ -9,7 +9,7 @@ public class SecurityConstants {
 
     public static final String RESET_PASSWORD_URL = "/auth/password-reset";
 
-    public static final String SET_NEW_PASSWORD_URL = "/auth/set-new-password/**";
+    public static final String SET_NEW_PASSWORD_URL = "/auth/set-new-password";
 
     public static final String UPL0AD_FILE_URL = "/auth/uploadFile";
 
