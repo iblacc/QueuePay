@@ -27,7 +27,7 @@ public class ProfileUpdateController {
     }
 
     @PostMapping("updateProfile/{user_id}")
-    public ResponseEntity<Response<ProfileUpdate>> updateProfile( @PathVariable Long user_id, @Valid @RequestBody UpdateRequest updateRequest) {
+    public ResponseEntity<Response<ProfileUpdate>> updateProfile(@PathVariable Long user_id, @Valid @RequestBody UpdateRequest updateRequest) {
         profileUpdateService.updateProfile(modelMapper.map(updateRequest, ProfileUpdate.class), user_id);
         Response<ProfileUpdate> response = new Response<>(HttpStatus.CREATED);
         response.setMessage("Your profile has successfully been updated. You can now enjoy all our services");
