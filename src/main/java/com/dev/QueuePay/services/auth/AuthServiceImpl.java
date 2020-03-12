@@ -10,6 +10,7 @@ import com.dev.QueuePay.utils.EmailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +32,9 @@ public class AuthServiceImpl implements AuthService {
     private EmailSender emailSender;
     private AuthenticationManager authenticationManager;
 
+    @Value("${server.port}")
+    private String port;
+
     @Autowired
     public AuthServiceImpl(UserRepository userRepository, JwtTokenProvider jwtTokenProvider,
                            BCryptPasswordEncoder bCryptPasswordEncoder, EmailSender emailSender,
@@ -50,7 +54,8 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(Role.ROLE_MERCHANT);
         String token = jwtTokenProvider.generateToken(user.getEmail());
         user.setVerifyEmailToken(token);
-        String url = "http://localhost:8081/auth/verifyEmail?token=" + token;
+
+        String url = "http://localhost:"+ port + "/auth/verifyEmail/" + token;
         String message =
                 "Hello" + user.getBusinessName() + ",\n" +
                 "You just created an account on QueuePay\n" +
@@ -106,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
                 user.getRole(), 3600000);
         System.out.println(token);
         user.setResetPasswordToken(token);
-        String url = "http://localhost:8081/password-reset?token="+user.getResetPasswordToken();
+        String url = "http://localhost:" + port + "/password-reset?token="+user.getResetPasswordToken();
 
         userRepository.save(user);
 
@@ -114,6 +119,11 @@ public class AuthServiceImpl implements AuthService {
                 "Hello" + user.getBusinessName() + ",\n" +
                         "A request was made to change Password. If it was not you, " +
                         "please ignore." +
+
+        String url = "http://localhost:" + port + "/password-reset/" + user.getUserId() + token;
+
+        String message =
+                "Hello " + user.getBusinessName() + ",\n" +
                         "You can use the following link to reset your password:\n" + url + "\n" +
                         "If you don’t use this link within 1 hour, it will expire.";
         emailSender.sendEmail(user.getEmail(), "QueuePay Reset Password", message);
@@ -140,4 +150,6 @@ public class AuthServiceImpl implements AuthService {
                 "userRepository=" + userRepository +
                 '}';
     }
+
+
 }

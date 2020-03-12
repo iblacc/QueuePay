@@ -32,7 +32,7 @@ public class AuthController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("signUp")
+    @PostMapping("signup")
     public ResponseEntity<Response<String>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         authService.createUser(modelMapper.map(signUpRequest, User.class));
         Response<String> response = new Response<>(HttpStatus.CREATED);
