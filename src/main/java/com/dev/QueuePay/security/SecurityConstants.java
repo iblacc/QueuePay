@@ -14,6 +14,7 @@ public class SecurityConstants {
     public static final String UPL0AD_FILE_URL = "/auth/uploadFile";
 
     public static final String DOWNLOAD_FILE_URL = "/auth/downloadFile/**";
+    public static final String PAYMENT_URL = "/payments/**";
 
     // Signing key for HS512 algorithm
     // You can use the page http://www.allkeysgenerator.com/ to generate all kinds of keys

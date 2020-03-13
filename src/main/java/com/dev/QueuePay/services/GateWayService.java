@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.HashMap;
 
 @Service
 public class GateWayService {
@@ -22,26 +23,29 @@ public class GateWayService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<Object> sendTransactionsByCard(GateWayCardRequest gateWayCardRequest, String url){
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<GateWayCardRequest> entity = new HttpEntity<>(gateWayCardRequest, headers);
-         restTemplate.exchange(
-                url, HttpMethod.POST, entity, Object.class
-        );
-         String message = "transaction completed";
-         return ResponseEntity.ok().body(message);
+    public ResponseEntity<?> sendTransactionsByCard(HashMap<String, String> gateWayAccountRequest, String url){
+        return consumeApi(gateWayAccountRequest, url);
     }
-    public ResponseEntity<Object> sendTransactionsByAccount(GateWayAccountRequest gateWayAccountRequest, String url){
+    public ResponseEntity<?> sendTransactionsByAccount(
+            HashMap<String, String> gateWayAccountRequest, String url
+        ){
+        //String message = "transaction completed";
+      return consumeApi(gateWayAccountRequest, url);
+
+    }
+    public ResponseEntity<?> completeTransactionWithOtp(HashMap<String,String> request, String url){
+        return consumeApi(request, url);
+    }
+    private ResponseEntity<?> consumeApi( HashMap<String, String> gateWayAccountRequest,
+                                          String url){
         HttpHeaders headers = new HttpHeaders();
 
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<GateWayAccountRequest> entity = new HttpEntity<>(gateWayAccountRequest, headers);
-         restTemplate.exchange(
-                url, HttpMethod.POST, entity, Object.class
-        );
-        String message = "transaction completed";
-        return ResponseEntity.ok().body(message);
+        headers.set("email",
+                "victoronushaibu@gmail.com");
+        headers.set("secret-key",
+                "$2a$11$QQX0ZsDeTPpKv/xvZnzPlOdylcGHOBtc2XF87arNwTv6DqGYEVT.O");
+        HttpEntity<HashMap<String, String>> entity = new HttpEntity<>(gateWayAccountRequest, headers);
+        return  restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
     }
 }
